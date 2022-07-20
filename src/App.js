@@ -30,7 +30,7 @@ class App extends React.Component {
       console.log(API);
 
       // show the map
-      const map_url = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_CITY_EXPLORER_TOKEN}&q=${this.state.searchQuery}&center=${res.data[0].lat},${res.data[0].lon}&zoom=10`;
+      const map_url = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_CITY_EXPLORER_TOKEN}&q=${this.state.searchQuery}&center=${res.data[0].lat},${res.data[0].lon}&zoom=12`;
 
       this.setState({
         location: res.data[0],
@@ -62,13 +62,14 @@ class App extends React.Component {
 
   render() {
     return (
-      <>
-        <input onChange={this.handleChange} placeholder="Explore!" />
+      <div className="container">
+      <h1 className="title">Search Anywhere in The World</h1>
+        <input className='search' onChange={this.handleChange} placeholder="Explore!" />
         <button onClick={this.getLocation}>Search</button>
         {/* <button onClick={this.getMap}>Map</button> */}
         {this.state.location.display_name && (
           <>
-            <h2>
+            <h2 className="city">
               City: {this.state.location.display_name} {this.state.location.lat}{" "}
               {this.state.location.lon}
             </h2>
@@ -76,7 +77,7 @@ class App extends React.Component {
           </>
         )}
         {this.state.apiError && <ErrorMsg message={this.state.apiError} />}
-      </>
+      </div>
     );
   }
 }
