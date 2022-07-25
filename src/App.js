@@ -24,10 +24,13 @@ class App extends React.Component {
   };
 
   getLocation = async () => {
+    let res;
+    console.log(process.env.REACT_APP_CITY_EXPLORER_TOKEN);
     try {
-      const API = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_CITY_EXPLORER_TOKEN}&q=${this.state.searchQuery}&format=json`;
-      const res = await axios.get(API);
+      // const API = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_CITY_EXPLORER_TOKEN}&q=${this.state.searchQuery}&format=json`;
+      const API = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_CITY_EXPLORER_TOKEN}&q=${this.state.searchQuery}&format=json`;
       console.log(API);
+      res = await axios.get(API);
 
       // show the map
       const map_url = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_CITY_EXPLORER_TOKEN}&q=${this.state.searchQuery}&center=${res.data[0].lat},${res.data[0].lon}&zoom=12`;
@@ -49,8 +52,30 @@ class App extends React.Component {
         lon: "",
       });
     }
+    // this.getWeather(res.data[0].lat, res.data[0].lon);
   };
 
+  getWeather = async (lat, lon) => {
+    try {
+      const API = `https://localhost:3000/weather/?lat=${lat}&lon=${lon}&searchQuery=${this.state.searchQuery}`;
+      const res = await axios.get(API);
+      console.log(API);
+      this.setState({
+        lat: res.data[0].lat,
+        lon: res.data[0].lon,
+      });
+    } catch (err) {
+      console.log(err);
+      this.setState({
+        apiError: err.message,
+        searchQuery: "",
+        location: {},
+        mapUrl: "",
+        lat: "",
+        lon: "",
+      });
+    }
+  };
   // getMap = async () => {
   //   const res = await axios.get(API);
   //   console.log(API);
@@ -63,8 +88,12 @@ class App extends React.Component {
   render() {
     return (
       <div className="container">
-      <h1 className="title">Search Anywhere in The World</h1>
-        <input className='search' onChange={this.handleChange} placeholder="Explore!" />
+        <h1 className="title">Search Anywhere in The World</h1>
+        <input
+          className="search"
+          onChange={this.handleChange}
+          placeholder="Explore!"
+        />
         <button onClick={this.getLocation}>Search</button>
         {/* <button onClick={this.getMap}>Map</button> */}
         {this.state.location.display_name && (
