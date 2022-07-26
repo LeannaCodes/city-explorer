@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import axios from "axios";
 import ErrorMsg from "./ErrorMsg";
+import Weather from "./Weather";
 
 class App extends React.Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class App extends React.Component {
         lon: "",
       });
     }
-    // this.getWeather(res.data[0].lat, res.data[0].lon);
+     this.getWeather(res.data[0].lat, res.data[0].lon);
   };
 
   getWeather = async (lat, lon) => {
@@ -61,8 +62,7 @@ class App extends React.Component {
       const res = await axios.get(API);
       console.log(API);
       this.setState({
-        lat: res.data[0].lat,
-        lon: res.data[0].lon,
+        weather: res.data
       });
     } catch (err) {
       console.log(err);
@@ -105,6 +105,7 @@ class App extends React.Component {
             <img src={this.state.mapUrl} alt="map" />
           </>
         )}
+        {this.state.weather && <Weather weatherData={this.state.weather}/>
         {this.state.apiError && <ErrorMsg message={this.state.apiError} />}
       </div>
     );
